@@ -64,11 +64,7 @@ export default function Dashboard() {
       const thisMonth = now.getMonth();
 
       let hariIni = 0, bulanIni = 0, tahunIni = 0, untung = 0, kosTahun = 0;
-      const agg: MonthAgg[] = [];
-      for (let i = 11; i >= 0; i--) {
-        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        agg.push({ label: BULAN[d.getMonth()], jualan: 0, untung: 0 });
-      }
+      const agg: MonthAgg[] = BULAN.map((b) => ({ label: b, jualan: 0, untung: 0 }));
       let latest = "";
 
       for (const p of allPes) {
@@ -82,12 +78,10 @@ export default function Dashboard() {
 
         if (p.tarikh.slice(0, 10) === today) hariIni += j;
         if (d.getMonth() === thisMonth && d.getFullYear() === thisYear) bulanIni += j;
-        if (d.getFullYear() === thisYear) tahunIni += j;
-
-        const diffMonths = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
-        if (diffMonths >= 0 && diffMonths < 12) {
-          const idx = 11 - diffMonths;
-          if (agg[idx]) { agg[idx].jualan += j; agg[idx].untung += u; }
+        if (d.getFullYear() === thisYear) {
+          tahunIni += j;
+          agg[d.getMonth()].jualan += j;
+          agg[d.getMonth()].untung += u;
         }
       }
 
@@ -172,19 +166,19 @@ export default function Dashboard() {
         <div className="hero-value">{fmt(kpi.untung)}</div>
       </div>
 
-      <div className="cards cards-lg">
-        <div className="card card-c1">
+      <div className="cards">
+        <div className="stat-card">
           <div className="label">Jualan Hari Ini</div>
           <div className="value">{fmt(kpi.hariIni)}</div>
         </div>
-        <div className="card card-c2">
+        <div className="stat-card">
           <div className="label">Jualan Bulan Ini</div>
           <div className="value">{fmt(kpi.bulanIni)}</div>
         </div>
       </div>
 
       <div className="panel-chart">
-        <h3 style={{ marginTop: 0 }}>Jualan & Untung Bulanan ({THIS_YEAR}, 12 bulan)</h3>
+        <h3 style={{ marginTop: 0 }}>Jualan &amp; Untung Bulanan ({THIS_YEAR})</h3>
         {loading ? (
           <p className="muted">Memuatkan graf…</p>
         ) : (
