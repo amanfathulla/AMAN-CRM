@@ -6,7 +6,7 @@ Dibina dengan Vite + React + TypeScript + Supabase Auth.
 
 ## 1. Setup Supabase (sekali sahaja)
 
-Buka Supabase project `uobueyudnehfrozzonnl` → **SQL Editor**, kemudian jalankan
+Buka Supabase project `xxxxxxxxxxxxxxx` → **SQL Editor**, kemudian jalankan
 fail SQL **satu per satu** (jangan paste semua sekali — editor akan potong):
 
 1. `sql/00_init.sql`  ← SEMUA schema (produk, pelanggan, pesanan, item_pesanan, rekod_tahunan) dalam 1 fail
@@ -24,7 +24,7 @@ cp .env.example .env
 Buka `.env` (Notepad) dan isi:
 
 ```
-VITE_SUPABASE_URL=https://uobueyudnehfrozzonnl.supabase.co
+VITE_SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxx.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=eyJ....   # Supabase → Settings → API (anon key)
 ```
 
