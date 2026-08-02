@@ -1274,6 +1274,33 @@ textarea {
   background: linear-gradient(135deg, #ea580c, #f59e0b);
 }
 
+/* ===== Stat card neutral: untuk angka biasa yang tak perlu warna gradient
+   penuh (kurangkan "pelangi" — kekalkan warna cuma untuk yang ada makna) ===== */
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 18px 22px;
+}
+.stat-card .label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.stat-card .value {
+  font-size: clamp(20px, 4vw, 26px);
+  font-weight: 800;
+  color: var(--text);
+}
+.stat-card.stat-green { border-left-color: #22c55e; }
+.stat-card.stat-orange { border-left-color: #f59e0b; }
+.stat-card.stat-red { border-left-color: #ef4444; }
+.stat-card.stat-green .value { color: #22c55e; }
+.stat-card.stat-orange .value { color: #f59e0b; }
+.stat-card.stat-red .value { color: #ef4444; }
+
 /* ===== Dashboard live header ===== */
 .dash-head {
   display: flex;
