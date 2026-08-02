@@ -528,18 +528,18 @@ export default function PelangganPage() {
       )}
 
       {/* 3 Card Status */}
-      <div className="cards cards-lg" style={{ marginBottom: 20 }}>
-        <div className="card" style={{ background: "linear-gradient(135deg, #16a34a, #22c55e)", border: "none" }}>
-          <div className="label" style={{ color: "rgba(255,255,255,0.85)" }}>Completed</div>
-          <div className="value" style={{ color: "#fff" }}>{statusCounts.completed}</div>
+      <div className="cards" style={{ marginBottom: 20 }}>
+        <div className="stat-card stat-green">
+          <div className="label">Completed</div>
+          <div className="value">{statusCounts.completed}</div>
         </div>
-        <div className="card" style={{ background: "linear-gradient(135deg, #d97706, #f59e0b)", border: "none" }}>
-          <div className="label" style={{ color: "rgba(255,255,255,0.85)" }}>Proses</div>
-          <div className="value" style={{ color: "#fff" }}>{statusCounts.proses}</div>
+        <div className="stat-card stat-orange">
+          <div className="label">Proses</div>
+          <div className="value">{statusCounts.proses}</div>
         </div>
-        <div className="card" style={{ background: "linear-gradient(135deg, #dc2626, #ef4444)", border: "none" }}>
-          <div className="label" style={{ color: "rgba(255,255,255,0.85)" }}>Cancel</div>
-          <div className="value" style={{ color: "#fff" }}>{statusCounts.cancel}</div>
+        <div className="stat-card stat-red">
+          <div className="label">Cancel</div>
+          <div className="value">{statusCounts.cancel}</div>
         </div>
       </div>
 
