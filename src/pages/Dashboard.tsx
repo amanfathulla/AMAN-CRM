@@ -214,28 +214,102 @@ export default function Dashboard() {
   );
 }
 
+function fmtShort(n: number) {
+  if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "") + "K";
+  return n.toFixed(0);
+}
+
 function Chart({ months, maxVal }: { months: MonthAgg[]; maxVal: number }) {
-  const W = 720, H = 260, pad = 30;
-  const innerW = W - pad * 2, innerH = H - pad * 2;
+  const [hover, setHover] = useState<number | null>(null);
+  const W = 720, H = 280, pad = 34, padL = 46;
+  const innerW = W - padL - pad, innerH = H - pad - 30;
   const bw = innerW / months.length, barW = bw * 0.32;
+  const fmt = (n: number) => "RM " + n.toLocaleString("ms-MY", { minimumFractionDigits: 2 });
+  const active = hover !== null ? months[hover] : null;
+  const activeX = hover !== null ? padL + hover * bw + bw / 2 : 0;
+  const tooltipPct = (activeX / W) * 100;
+  const tooltipLeft = Math.min(88, Math.max(12, tooltipPct));
+
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="chart" preserveAspectRatio="xMidYMid meet">
-    {[0, 0.25, 0.5, 0.75, 1].map((g) => {
-      const y = pad + innerH * (1 - g);
-      return <line key={g} x1={pad} x2={W - pad} y1={y} y2={y} stroke="#e2e8f0" strokeWidth={1} />;
-    })}
-    {months.map((m, i) => {
-      const x = pad + i * bw + bw / 2;
-      const hJ = (m.jualan / maxVal) * innerH, hU = (m.untung / maxVal) * innerH;
-      const yJ = pad + innerH - hJ, yU = pad + innerH - hU;
-      return (
-        <g key={i}>
-          <rect x={x - barW - 1} y={yJ} width={barW} height={hJ} fill="var(--accent)" rx={3} />
-          <rect x={x + 1} y={yU} width={barW} height={hU} fill="var(--green)" rx={3} />
-          <text x={x} y={H - 10} fontSize={11} fill="#64748b" textAnchor="middle">{m.label}</text>
-        </g>
-      );
-    })}
-  </svg>
+    <div className="chart-wrap">
+      <svg viewBox={`0 0 ${W} ${H}`} className="chart" preserveAspectRatio="xMidYMid meet">
+        {[0, 0.25, 0.5, 0.75, 1].map((g) => {
+          const y = pad + innerH * (1 - g);
+          return (
+            <g key={g}>
+              <line x1={padL} x2={W - pad} y1={y} y2={y} stroke="#334155" strokeWidth={1} />
+              <text x={padL - 8} y={y + 4} fontSize={10} fill="#64748b" textAnchor="end">
+                {fmtShort(maxVal * g)}
+              </text>
+            </g>
+          );
+        })}
+        {months.map((m, i) => {
+          const x = padL + i * bw + bw / 2;
+          const hJ = (m.jualan / maxVal) * innerH, hU = (m.untung / maxVal) * innerH;
+          const yJ = pad + innerH - hJ, yU = pad + innerH - hU;
+          const isHover = hover === i;
+          return (
+            <g
+              key={i}
+              onMouseEnter={() => setHover(i)}
+              onMouseLeave={() => setHover(null)}
+              style={{ cursor: "pointer" }}
+            >
+              <rect
+                x={padL + i * bw}
+                y={pad}
+                width={bw}
+                height={innerH}
+                fill={isHover ? "rgba(148, 163, 184, 0.1)" : "transparent"}
+                rx={4}
+              />
+              <rect
+                x={x - barW - 1}
+                y={yJ}
+                width={barW}
+                height={Math.max(hJ, 1)}
+                fill="var(--accent)"
+                opacity={isHover ? 1 : 0.85}
+                rx={3}
+              />
+              <rect
+                x={x + 1}
+                y={yU}
+                width={barW}
+                height={Math.max(hU, 1)}
+                fill="var(--green)"
+                opacity={isHover ? 1 : 0.85}
+                rx={3}
+              />
+              <text
+                x={x}
+                y={pad + innerH + 20}
+                fontSize={11}
+                fontWeight={isHover ? 700 : 400}
+                fill={isHover ? "#e2e8f0" : "#64748b"}
+                textAnchor="middle"
+              >
+                {m.label}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+
+      {active && (
+        <div className="chart-tooltip" style={{ left: `${tooltipLeft}%` }}>
+          <div className="chart-tooltip-title">{active.label} {THIS_YEAR}</div>
+          <div className="chart-tooltip-row">
+            <span className="chart-dot" style={{ background: "var(--accent)" }} />
+            Jualan <strong>{fmt(active.jualan)}</strong>
+          </div>
+          <div className="chart-tooltip-row">
+            <span className="chart-dot" style={{ background: "var(--green)" }} />
+            Untung <strong>{fmt(active.untung)}</strong>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
